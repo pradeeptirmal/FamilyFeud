@@ -1,0 +1,11 @@
+{
+  "exclude": [
+    "node_modules/*"
+  ],
+  "compilerOptions": {
+    "target": "es5",
+    "baseUrl": "./",
+    "outDir": "./tmp",
+    "allowJs": true,
+  }
+}
