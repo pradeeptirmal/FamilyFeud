@@ -14,10 +14,7 @@ var app = {
         "<span class='question'></span>" +
       "</div>" +
       "<!--- Answers --->" +
-      "<div class='colHolder'>" +
-        "<div class='col1'></div>" +
-        "<div class='col2'></div>" +
-      "</div>" +
+      "<div class='colHolder'></div>" +
       "<!--- Buttons --->" +
       "<div class='btnHolder'>" +
         "<div id='awardTeam1' data-team='1' class='button'>Award Team 1</div>" +
@@ -26,7 +23,7 @@ var app = {
         "<div id='awardTeam2' data-team='2'class='button'>Award Team 2</div>" +
       "</div>" +
     "</div>" +
-    "<ul id='xContainer'></ul>"
+    "<ul id='strikeBoard'></ul>"
   ),
   buzzer: document.getElementById("buzzer"),
   ding: document.getElementById("ding"),
@@ -68,13 +65,11 @@ var app = {
 
     var boardScore = app.board.find("#boardScore");
     var question = app.board.find(".question");
-    var col1 = app.board.find(".col1");
-    var col2 = app.board.find(".col2");
+    var answersWrapper = app.board.find(".colHolder");
 
     boardScore.html(0);
     question.html(qText.replace(/&x22;/gi, '"'));
-    col1.empty();
-    col2.empty();
+    answersWrapper.empty();
 
     for (var i = 0; i < qNum; i++) {
       var aLI;
@@ -101,8 +96,7 @@ var app = {
       } else {
         aLI = $("<div class='cardHolder empty'><div></div></div>");
       }
-      var parentDiv = i < qNum / 2 ? col1 : col2;
-      $(aLI).appendTo(parentDiv);
+      $(aLI).appendTo(answersWrapper);
     }
 
     var cardHolders = app.board.find(".cardHolder");
@@ -116,23 +110,23 @@ var app = {
     TweenLite.set(cardSides, { backfaceVisibility: "hidden" });
 
     cards.data("flipped", false);
-
-    function showCard() {
-      var card = $(".card", this);
-      if(card.length === 0) {
-        return;
-      }
-      var flipped = $(card).data("flipped");
-      var cardRotate = flipped ? 0 : -180;
-      TweenLite.to(card, 1, { rotationX: cardRotate, ease: Back.easeOut });
-      flipped = !flipped;
-      if(card.length > 0 && flipped) {
-        ding.play();
-      }
-      $(card).data("flipped", flipped);
-      app.getBoardScore();
+    cardHolders.on("click", app.showCard);
+  },
+  showCard: function(cardNumber) {
+    var el = Number.isInteger(cardNumber) ? $(`.cardHolder:nth-child(${cardNumber}) .card`): '';
+    var card = el.length !== 0 ? el : $(".card", this);
+    if(card.length === 0) {
+      return;
     }
-    cardHolders.on("click", showCard);
+    var flipped = $(card).data("flipped");
+    var cardRotate = flipped ? 0 : -180;
+    TweenLite.to(card, 1, { rotationX: cardRotate, ease: Back.easeOut });
+    flipped = !flipped;
+    if(card.length > 0 && flipped) {
+      ding.play();
+    }
+    $(card).data("flipped", flipped);
+    app.getBoardScore();
   },
   getBoardScore: function() {
     var cards = app.board.find(".card");
@@ -180,7 +174,7 @@ var app = {
     });
   },
   changeQuestion: function() {
-    document.getElementById("xContainer").innerHTML = '';
+    document.getElementById("strikeBoard").innerHTML = '';
     app.currentQ++;
     app.makeQuestion(app.currentQ);
   },
@@ -188,9 +182,9 @@ var app = {
     if(xCount <= 3) {
       xCount++;
       buzzer.play();
-      var xContainer = document.getElementById("xContainer");
+      var strikeBoard = document.getElementById("strikeBoard");
       var xMark = $("<li class='strike'>x</li>");
-      $(xMark).appendTo(xContainer).show("fast");
+      $(xMark).appendTo(strikeBoard).show("fast");
       var ele = $( "li.strike" ).last();
       var tl = new TimelineLite();
           tl.to(ele, 0.25, {scaleX:2, scaleY:2})
@@ -198,12 +192,8 @@ var app = {
       
 	  }
   },
-  revealAnswer: function(answerNumber) {
-    console.log(`reveal answer ${answerNumber}`);
-  },
   keyBoardEvents: function() {
     document.onkeypress = function (e) {
-      // use e.keyCode
       switch(e.code) {
         case 'KeyX':
           app.addCross();
@@ -218,28 +208,15 @@ var app = {
           app.awardPoints(2);
           break;
         case 'Numpad1':
-          app.revealAnswer(1);
-          break;
         case 'Numpad2':
-          app.revealAnswer(2);
-          break;
         case 'Numpad3':
-          app.revealAnswer(3);
-          break;
         case 'Numpad4':
-          app.revealAnswer(4);
-          break;
         case 'Numpad5':
-          app.revealAnswer(5);
-          break;
         case 'Numpad6':
-          app.revealAnswer(6);
-          break;
         case 'Numpad7':
-          app.revealAnswer(7);
-          break;
         case 'Numpad8':
-          app.revealAnswer(8);
+          var num = e.code.replace(/Numpad/g,'');
+          app.showCard(parseInt(num));
           break;
 
       }
