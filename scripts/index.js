@@ -115,10 +115,10 @@ var app = {
   showCard: function(cardNumber) {
     var el = Number.isInteger(cardNumber) ? $(`.cardHolder:nth-child(${cardNumber}) .card`): '';
     var card = el.length !== 0 ? el : $(".card", this);
-    if(card.length === 0) {
+    var flipped = $(card).data("flipped");
+    if(card.length === 0 || flipped) {
       return;
     }
-    var flipped = $(card).data("flipped");
     var cardRotate = flipped ? 0 : -180;
     TweenLite.to(card, 1, { rotationX: cardRotate, ease: Back.easeOut });
     flipped = !flipped;

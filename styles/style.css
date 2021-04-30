@@ -15,7 +15,6 @@ body {
 }
 
 .gameBoard .cardHolder > div:empty,
-.gameBoard .button,
 .gameBoard .DBG {
   background: #7db9e8;
   background: linear-gradient(0deg, rgba(7,25,73,1) 0%, rgba(10,31,82,1) 14%, rgba(42,96,184,1) 48%, rgba(41,94,182,1) 52%, rgba(29,84,176,1) 70%, rgba(34,70,154,1) 100%);
@@ -250,6 +249,7 @@ body {
   -moz-box-shadow: 0 1px 24px 1px rgba(0, 0, 0, 0.48);
   box-shadow: 0 1px 24px 1px rgba(0, 0, 0, 0.48);
   border-radius: 15px;
+  background: linear-gradient(0deg, rgba(7,25,73,1) 0%, rgb(2 7 20) 14%, rgb(29 35 47) 48%, rgb(33 45 66) 52%, rgb(66 80 102) 70%, rgb(33 42 63) 100%);
 }
 
 .gameBoard .btnCrossHolder {
