@@ -9,6 +9,9 @@ body {
   width: 100%;
   box-sizing: border-box;
   font-family: fantasy;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 3px #000000;
   margin: 0;
   background: #23538a url('../assets/background.jpg') no-repeat top left;
   background-size: cover;
@@ -24,7 +27,6 @@ body {
 .gameBoard {
   position: relative;
   color: white;
-  text-shadow: 1px 1px 3px #000000;
   border: 5px solid #91422b;
   text-align: center;
   padding: 150px;
@@ -49,7 +51,7 @@ body {
   line-height: 50px;
   width: 75px;
   padding: 20px;
-  border: 4px solid white;
+  border: 4px solid #009688;
   -webkit-box-shadow: inset 0 1px 24px 1px rgba(0, 0, 0, 0.48);
   -moz-box-shadow: inset 0 1px 24px 1px rgba(0, 0, 0, 0.48);
   box-shadow: inset 0 1px 24px 1px rgba(0, 0, 0, 0.48);
@@ -86,7 +88,6 @@ body {
   line-height: 55px;
   text-align: center;
   font-size: 25px;
-  color: #ffffff;
   padding: 10px;
   margin-bottom: 15px;
   border: 4px solid #fffa1f;
@@ -97,9 +98,6 @@ body {
   box-sizing: border-box;
   position: relative;
   background: linear-gradient(0deg, rgba(7,25,73,1) 0%, rgba(10,31,82,1) 14%, rgba(42,96,184,1) 48%, rgba(41,94,182,1) 52%, rgba(29,84,176,1) 70%, rgba(34,70,154,1) 100%);
-  text-shadow: 1px 1px 3px #000000;
-  letter-spacing: 1px;
-  text-transform: uppercase;
 }
 .gameBoard .questionHolder span {
   display: inline-block;
@@ -141,7 +139,7 @@ body {
   left: -6px;
   top: -6px;
   z-index: 0;
-  border-radius: 16px;
+  border-radius: 18px;
 }
 .gameBoard .colHolder > div {
   display: block;
@@ -158,7 +156,7 @@ body {
   margin: 4px;
   width: 95%;
   background: black;
-  border: 4px solid white;
+  border: 4px solid #dddddd;
   border-radius: 6px;
   z-index: 1;
 }
@@ -188,9 +186,6 @@ body {
   height: 100%;
   border: 2px solid #003c7b;
   line-height: 50px;
-  font-family: fantasy;
-  letter-spacing: 1px;
-  text-transform: uppercase;
   background: linear-gradient(0deg, rgba(7,25,73,1) 0%, rgba(10,31,82,1) 14%, rgba(42,96,184,1) 48%, rgba(41,94,182,1) 52%, rgba(29,84,176,1) 70%, rgba(34,70,154,1) 100%);
   border-radius: 6px;
 }
@@ -244,7 +239,8 @@ body {
   height: 50px;
   line-height: 50px;
   width: 175px;
-  border: 3px solid white;
+  border: 3px solid #dddddd;
+  color: #dddddd;
   -webkit-box-shadow: 0 1px 24px 1px rgba(0, 0, 0, 0.48);
   -moz-box-shadow: 0 1px 24px 1px rgba(0, 0, 0, 0.48);
   box-shadow: 0 1px 24px 1px rgba(0, 0, 0, 0.48);
@@ -289,17 +285,18 @@ body {
 }
 #strikeBoard .strike{
   font-size: 60px;
-  color: #ffffff;
+  color: white;
   width: 80px;
   height: 80px;
-  border: 2px solid #ffffff;
+  border: 2px solid white;
   margin-bottom: 25px;
   border-radius: 50%;
   background: radial-gradient(circle, #ff6969 0%, #950202 49%, #c10101 100%);
-  font-family: fantasy;
   text-align: center;
-  text-shadow: 1px 1px 3px #000000;
   transition: all .2s linear;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 80px;
+  font-weight: 700;
 }
 #strikeBoard .strike:nth-child(4){
   margin-top: 100px;

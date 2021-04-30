@@ -45,7 +45,7 @@ var app = {
   jsonLoaded: function(data) {
     app.allData = data;
     app.questions = Object.keys(data);
-    app.shuffle(app.questions);
+    // app.shuffle(app.questions);
     app.makeQuestion(app.currentQ);
     $("body").append(app.board);
     app.currentQ++;
@@ -60,7 +60,7 @@ var app = {
     var qAnswr = app.allData[qText];
 
     var qNum = qAnswr.length;
-    qNum = qNum < 8 ? 8 : qNum;
+    qNum = qNum <= 8 ? 8 : qNum;
     qNum = qNum % 2 != 0 ? qNum + 1 : qNum;
 
     var boardScore = app.board.find("#boardScore");
@@ -175,8 +175,7 @@ var app = {
   },
   changeQuestion: function() {
     document.getElementById("strikeBoard").innerHTML = '';
-    app.currentQ++;
-    app.makeQuestion(app.currentQ);
+    app.makeQuestion(app.currentQ++);
   },
   addCross: function() {
     if(xCount <= 3) {
