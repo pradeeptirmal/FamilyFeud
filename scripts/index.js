@@ -1,9 +1,7 @@
-// Import stylesheets
-// Write Javascript code!
 var app = {
   version: 1,
   currentQ: -1,
-  jsonFile: "https://api.npoint.io/78f78b5a6af096037f8a",
+  jsonFile: "./assets/questions.json",
   // jsonFile: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/40041/FF3.json",
   board: $(
     "<div class='gameBoard'>" +
@@ -13,40 +11,26 @@ var app = {
       "<div class='score' id='team2' >0</div>" +
       "<!--- Question --->" +
       "<div class='questionHolder'>" +
-      "<span class='question'></span>" +
+        "<span class='question'></span>" +
       "</div>" +
       "<!--- Answers --->" +
       "<div class='colHolder'>" +
-      "<div class='col1'></div>" +
-      "<div class='col2'></div>" +
+        "<div class='col1'></div>" +
+        "<div class='col2'></div>" +
       "</div>" +
       "<!--- Buttons --->" +
       "<div class='btnHolder'>" +
-      "<div id='awardTeam1' data-team='1' class='button'>Award Team 1</div>" +
-      "<div id='newQuestion' class='button'>New Question</div>" +
-      "<div id='awardTeam2' data-team='2'class='button'>Award Team 2</div>" +
+        "<div id='awardTeam1' data-team='1' class='button'>Award Team 1</div>" +
+        "<div id='newQuestion' class='button'>New Question</div>" +
+        "<div id='cross' data-team='1' class='cross button'>Strike</div>" +
+        "<div id='awardTeam2' data-team='2'class='button'>Award Team 2</div>" +
       "</div>" +
-      "</div>"
+    "</div>" +
+    "<ul id='xContainer'></ul>"
   ),
-  emptyBoard: $(
-    "<div class='gameBoard'>" +
-      "<!--- Scores --->" +
-      "<div class='score' id='boardScore' style='opacity:0'>0</div>" +
-      "<div class='score' id='team1' style='opacity:0'>0</div>" +
-      "<div class='score' id='team2' style='opacity:0'>0</div>" +
-      "<!--- Question --->" +
-      "<div class='questionHolder'>" +
-      "<span class='question'>Welcome to Family Feud!!</span>" +
-      "</div>" +
-      "<!--- Answers --->" +
-      "<!--- Buttons --->" +
-      "<div class='btnHolder'>" +
-      "<div id='awardTeam1' data-team='1' class='button' style='opacity:0'>Award Team 1</div>" +
-      "<div id='newQuestion' class='button'>Start</div>" +
-      "<div id='awardTeam2' data-team='2'class='button' style='opacity:0'>Award Team 2</div>" +
-      "</div>" +
-      "</div>"
-  ),
+  buzzer: document.getElementById("buzzer"),
+  ding: document.getElementById("ding"),
+  xCount: 0,
   // Utility functions
   shuffle: function(array) {
     var currentIndex = array.length,
@@ -62,18 +46,16 @@ var app = {
     return array;
   },
   jsonLoaded: function(data) {
-    console.log(data);
     app.allData = data;
     app.questions = Object.keys(data);
     app.shuffle(app.questions);
     app.makeQuestion(app.currentQ);
-    console.log(app.currentQ);
     $("body").append(app.board);
     app.currentQ++;
-    console.log(app.currentQ);
   },
   // Action functions
   makeQuestion: function(qNum) {
+    xCount = 0;
     if (qNum < 0) {
       return;
     }
@@ -137,10 +119,16 @@ var app = {
 
     function showCard() {
       var card = $(".card", this);
+      if(card.length === 0) {
+        return;
+      }
       var flipped = $(card).data("flipped");
       var cardRotate = flipped ? 0 : -180;
       TweenLite.to(card, 1, { rotationX: cardRotate, ease: Back.easeOut });
       flipped = !flipped;
+      if(card.length > 0 && flipped) {
+        ding.play();
+      }
       $(card).data("flipped", flipped);
       app.getBoardScore();
     }
@@ -168,8 +156,8 @@ var app = {
       ease: Power3.easeOut
     });
   },
-  awardPoints: function(num) {
-    var num = $(this).attr("data-team");
+  awardPoints: function(number) {
+    var num = Number.isInteger(number) ? number : $(this).attr("data-team");
     var boardScore = app.board.find("#boardScore");
     var currentScore = { var: parseInt(boardScore.html()) };
     var team = app.board.find("#team" + num);
@@ -192,9 +180,70 @@ var app = {
     });
   },
   changeQuestion: function() {
-    console.log("here");
+    document.getElementById("xContainer").innerHTML = '';
     app.currentQ++;
     app.makeQuestion(app.currentQ);
+  },
+  addCross: function() {
+    if(xCount <= 3) {
+      xCount++;
+      buzzer.play();
+      var xContainer = document.getElementById("xContainer");
+      var xMark = $("<li class='strike'>x</li>");
+      $(xMark).appendTo(xContainer).show("fast");
+      var ele = $( "li.strike" ).last();
+      var tl = new TimelineLite();
+          tl.to(ele, 0.25, {scaleX:2, scaleY:2})
+            .to(ele, 0.5, {scaleX:1, scaleY:1});
+      
+	  }
+  },
+  revealAnswer: function(answerNumber) {
+    console.log(`reveal answer ${answerNumber}`);
+  },
+  keyBoardEvents: function() {
+    document.onkeypress = function (e) {
+      // use e.keyCode
+      switch(e.code) {
+        case 'KeyX':
+          app.addCross();
+          break;
+        case 'KeyN':
+          app.changeQuestion();
+          break;
+        case 'Digit1':
+          app.awardPoints(1);
+          break;
+        case 'Digit2':
+          app.awardPoints(2);
+          break;
+        case 'Numpad1':
+          app.revealAnswer(1);
+          break;
+        case 'Numpad2':
+          app.revealAnswer(2);
+          break;
+        case 'Numpad3':
+          app.revealAnswer(3);
+          break;
+        case 'Numpad4':
+          app.revealAnswer(4);
+          break;
+        case 'Numpad5':
+          app.revealAnswer(5);
+          break;
+        case 'Numpad6':
+          app.revealAnswer(6);
+          break;
+        case 'Numpad7':
+          app.revealAnswer(7);
+          break;
+        case 'Numpad8':
+          app.revealAnswer(8);
+          break;
+
+      }
+    };
   },
   // Inital function
   init: function() {
@@ -202,7 +251,8 @@ var app = {
     app.board.find("#newQuestion").on("click", app.changeQuestion);
     app.board.find("#awardTeam1").on("click", app.awardPoints);
     app.board.find("#awardTeam2").on("click", app.awardPoints);
+    app.board.find("#cross").on("click", app.addCross);
+    app.keyBoardEvents();
   }
 };
 app.init();
-//http://www.qwizx.com/gssfx/usa/ff.htm
